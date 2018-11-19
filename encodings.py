@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import random
 import base64
@@ -9,16 +11,18 @@ b = os.urandom(16)
 print(f"hexify: {b.hex()}, type: str={type(b.hex())}")
 
 for i in b:
-    print(f'{i:02X}', end="")
+    print(f"{i:02X}", end="")
 print()
 
 b16 = base64.b16encode(b)
-print(f"b16={b16)}, type={type(b16)} len={len(b16)}")
+print(f"b16={b16}, type={type(b16)} len={len(b16)}")
 
 b64 = base64.b64encode(b)
-print(f"b64: {b64}, len: {len(b64)}")
+print(f"b64: {b64}, type={type(b64)}, len: {len(b64)}")
 
-print(f"b.decode(): {b.decode()}, type(b.decode()): {type(b.decode())}")
+test = b'DEAD'
+print(f"""test.decode(): {test.decode()},"""
+      f"""type(test.decode()): {type(test.decode())}""")
 
 BYTE_SIZE = 512
 
@@ -52,4 +56,3 @@ string = ''.join([c if c.isprintable() else '.' for c in ascii])
 print(f'str_len: {len(string)}')
 for i in range(0, BYTE_SIZE, 16):
     print(string[i:i+16])
-
