@@ -34,7 +34,9 @@ b[70:76] = b'SELCUK'
 b[86:96] = b'KARAKAYALI'
 
 print(f"len of bytearray {len(b)}")
+print(f"hereee b16[0]: {b[0]}")
 b16 = base64.b16encode(b)
+print(f"hereee b16[0]: {b16[0]}")
 print(f"len of bytearray {len(b16)}")
 print(f"b16-type: {type(b16)}, len: {len(b16)}")
 print(b16)
