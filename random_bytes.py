@@ -7,6 +7,7 @@ from flask import Response
 
 app = Flask(__name__)
 
+BYTE_SIZE = 256
 
 def random():
     while True:
@@ -28,9 +29,10 @@ def hello_world():
     return Response(random(), mimetype='multipart/form-data; boundary=bytes')
 
 
+# TODO make this a generator
+# TODO include offset so (offset) (16 bytes) (ascii)
+# TODO let the name appear randomly
 def random_block(first_name, last_name):
-    BYTE_SIZE = 256
-
     bytez = bytearray(os.urandom(BYTE_SIZE))
 
     bytez[70:len(first_name)] = first_name.encode('ascii')
@@ -53,11 +55,10 @@ def random_block(first_name, last_name):
     for i in range(0, BYTE_SIZE, 16):
         ascii_block += string[i:i+16] + os.linesep
 
-    return (hex_block, ascii_block)
+    yield (hex_block, ascii_block)
 
 
 result = random_block("SELCUK", "KARAKAYALI")
-
 
 for elem in zip(result[0].split(os.linesep), result[1].split(os.linesep)):
     print(f"{elem[0]}{elem[1]: >20}")
