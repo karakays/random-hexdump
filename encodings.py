@@ -14,6 +14,13 @@ for i in b:
     print(f"{i:02X}", end="")
 print()
 
+
+s = "hello"
+print(f"string to binary b={s.encode()}, type: type(s.encode())") # utf-8 character encoding by default
+print(f"b={s.encode('ascii')}, type: type(s.encode('ascii'))")
+print(f"b={s.encode('utf-8')}, type: type(s.encode('utf-8'))")
+
+
 b16 = base64.b16encode(b)
 print(f"b16={b16}, type={type(b16)} len={len(b16)}")
 
