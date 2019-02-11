@@ -1,6 +1,8 @@
 import time
 import os
 import base64
+import random
+import numpy
 from flask import Flask
 from flask import Response
 
@@ -31,23 +33,26 @@ def hello_world():
 
 # TODO make this a generator
 # TODO include offset so (offset) (16 bytes) (ascii)
-# TODO let the name appear randomly
-def random_block(first_name, last_name):
+# TODO use numparray instead of tuple
+def random_block(name):
     bytez = bytearray(os.urandom(BYTE_SIZE))
 
-    bytez[70:len(first_name)] = first_name.encode('ascii')
-    bytez[86:len(last_name)] = last_name.encode('ascii')
+    start, end = (random.randint(0, BYTE_SIZE - len(name)), len(name))
 
-    b16 = base64.b16encode(bytez).decode()
+    bytez[start:end] = name.encode('ascii')
+
+    np_arr = np.array(bytez).reshape(BYTE_SIZE / 16, 16)
+
+    hex_chars = base64.b16encode(bytez).decode()
 
     hex_block = ""
 
     for r in range(0, len(b16), 32):
         for c in range(0, 32, 2):
             i = r + c
-            hex_block += b16[i:i+2] + " "
+            hex_block += hex_chars[i:i+2] + " "
         hex_block += os.linesep
-
+    print(hex_block)
     ascii_block = ""
 
     ascii = bytez.decode('ascii', 'replace').replace('\ufffD', '.')
@@ -55,10 +60,8 @@ def random_block(first_name, last_name):
     for i in range(0, BYTE_SIZE, 16):
         ascii_block += string[i:i+16] + os.linesep
 
-    yield (hex_block, ascii_block)
+    yield (ascii_block)
 
 
-result = random_block("SELCUK", "KARAKAYALI")
-
-for elem in zip(result[0].split(os.linesep), result[1].split(os.linesep)):
-    print(f"{elem[0]}{elem[1]: >20}")
+for n in random_block("SELCUK KARAKAYALI"):
+    print(n)
