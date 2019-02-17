@@ -5,39 +5,47 @@ import random
 import numpy
 
 
-def random_hex(name=None, byte_len=256):
-    bytez = bytearray(os.urandom(byte_len))
-    start = random.randint(0, byte_len - len(name))
+def random_hex(name=None, length=256):
+    """
+    rows of 16 bytes
+    """
+    bytez = bytearray(os.urandom(length))
+    start = random.randint(0, length - len(name))
     end = start + len(name)
     bytez[start:end] = name.encode('ascii')
-    yield (numpy.array(bytez).reshape(byte_len // 16, 16))
+    yield (numpy.array(bytez).reshape(length // 16, 16))
 
 
-def to_ascii(bytez):
-    pass
+def bytes_to_ascii(bytez, replace='.'):
+    """
+    Converts bytes type given into printable
+    ascii characters
+    """
+    chars = bytez.decode('ascii', 'replace').replace('\ufffD', replace)
+    return ''.join([c if c.isprintable() else '.' for c in chars])
 
 
-def hex_dump(byte_arr, offset=None):
-    hex_chars = base64.b16encode(bytez).decode()
+def hex_dump(byte_np, offset=0):
+    """
+    Returns hexadecimal representation of the
+    numpy array of bytes given
+    """
+    row = None
+    line = None
+    word = "2 bytes"
+    hex_dmp = ""
+    os = offset
 
-    hex_block = ""
+    for e in byte_np:
+        hr = " ".join([f"{b:02X}" for b in e])
+        ar = bytes_to_ascii(bytes(e))
+        hex_dmp += f"{os:08X} {hr} {ar}\n"
+        os += 16
 
-    for r in range(0, len(b16), 32):
-        for c in range(0, 32, 2):
-            i = r + c
-            hex_block += hex_chars[i:i+2] + " "
-        hex_block += os.linesep
-    ascii_block = ""
-
-    ascii = bytez.decode('ascii', 'replace').replace('\ufffD', '.')
-    string = ''.join([c if c.isprintable() else '.' for c in ascii])
-    for i in range(0, BYTE_SIZE, 16):
-        ascii_block += string[i:i+16] + os.linesep
-
-    yield (ascii_block)
+    return hex_dmp
 
 
 if __name__ == '__main__':
     for n in random_hex("SELCUK KARAKAYALI"):
         time.sleep(2)
-        print(n)
+        print(hex_dump(n))
