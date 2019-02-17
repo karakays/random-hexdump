@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+
 # byte literals prefix with b
 byte = b'\x16'
-print(f'type: {type({byte})}, value: {byte}')
+print(f'value: {byte}')
+
+# byte literals are resolbed to bytes built-in type
+print(f'type: {type={byte}}')
 
 # 0x61 matches ASCII 'a' character
 byte = b'\x61'

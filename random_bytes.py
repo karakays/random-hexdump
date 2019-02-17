@@ -25,7 +25,7 @@ def bytes_to_ascii(bytez, replace='.'):
     return ''.join([c if c.isprintable() else '.' for c in chars])
 
 
-def hex_dump(byte_np, offset=0):
+def hex_dump(source, offset=0):
     """
     Returns hexadecimal representation of the
     numpy array of bytes given
@@ -34,13 +34,12 @@ def hex_dump(byte_np, offset=0):
     line = None
     word = "2 bytes"
     hex_dmp = ""
-    os = offset
 
-    for e in byte_np:
+    for e in source:
         hr = " ".join([f"{b:02X}" for b in e])
         ar = bytes_to_ascii(bytes(e))
-        hex_dmp += f"{os:08X} {hr} {ar}\n"
-        os += 16
+        hex_dmp += f"{offset:08X} {hr} {ar}\n"
+        offset += 16
 
     return hex_dmp
 
