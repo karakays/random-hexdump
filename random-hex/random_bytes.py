@@ -5,14 +5,14 @@ import random
 import numpy
 
 
-def random_hex(name=None, length=256):
+def random_hex(text=None, length=256):
     """
     rows of 16 bytes
     """
     bytez = bytearray(os.urandom(length))
-    start = random.randint(0, length - len(name))
-    end = start + len(name)
-    bytez[start:end] = name.encode('ascii')
+    start = random.randint(0, length - len(text))
+    end = start + len(text)
+    bytez[start:end] = text.encode('ascii')
     yield (numpy.array(bytez).reshape(length // 16, 16))
 
 
@@ -33,19 +33,19 @@ def hex_dump(byte_np, offset=0):
     row = None
     line = None
     word = "2 bytes"
-    hex_dmp = ""
-    os = offset
+    output = ""
 
     for e in byte_np:
-        hr = " ".join([f"{b:02X}" for b in e])
-        ar = bytes_to_ascii(bytes(e))
-        hex_dmp += f"{os:08X} {hr} {ar}\n"
-        os += 16
+        hex_col = " ".join([f"{b:02X}" for b in e])
+        ascii_col = bytes_to_ascii(bytes(e))
+        output += f"{offset:08X} {hex_col} {ascii_col}\n"
+        offset += 16
 
-    return hex_dmp
+    return output
 
 
 if __name__ == '__main__':
-    for n in random_hex("SELCUK KARAKAYALI"):
-        time.sleep(2)
-        print(hex_dump(n))
+    while True:
+        r = random_hex("SELCUK KARAKAYALI")
+        time.sleep(0.5)
+        print(hex_dump(next(r)), end='')
