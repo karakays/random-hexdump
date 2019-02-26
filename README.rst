@@ -2,7 +2,7 @@
 random-hexdump
 =======
 
-A utility that randomly generates bytes and prints to standard output.
+A hexdump implementation. random-hexdump randomly produces bytes and prints it to the standard output.
 
 ---------------
 License
