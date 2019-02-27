@@ -2,13 +2,17 @@
 random-hexdump
 =======
 
-A hexdump implementation. random-hexdump randomly produces bytes and prints it to the standard output.
+A hexdump implementation.
+
+Displays the offset in hexadecimal, followed by 16 space-separated random hexadecimal bytes , followed by the same sixteen bytes in ASCII representation.
+
+Inspired by Jamie Zawinski's homepage_.
 
 ---------------
 License
 ---------------
 
-`MIT license`_
+`MIT license`
 
 ---------------
 Authors
@@ -16,3 +20,4 @@ Authors
 
 Selçuk Karakayalı <skarakayali@gmail.com>
 
+.. _homepage: https://jwz.org
