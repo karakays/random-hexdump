@@ -5,6 +5,8 @@ import random
 import numpy
 
 
+CHUNK_SIZE = 16
+
 def random_hex_np(text=None, length=256):
     """
     rows of 16 bytes
@@ -16,34 +18,51 @@ def random_hex_np(text=None, length=256):
     yield (numpy.array(bytez).reshape(length // 16, 16))
 
 
-def random_hex(size, iterate=100):
+def random_block(size, iterate=100):
     while iterate:
-        yield (os.urandom(size))
+        yield os.urandom(size)
         iterate -= 1
 
 
-def dump_line(size=0x10, offset=0x00):
+def dump_block(size=0x10, offset=0x00):
     def next():
         nonlocal offset
-        for bytez in random_hex(size):
+        chunk = None
+        for bytez in random_block(size):
+            text = yield(chunk)
+            print(f"text is {text}")
             hex_col = " ".join([f"{b:02X}" for b in bytez])
-            ascii_col = bytes_to_ascii(bytes(bytez))
-            yield f"{offset:08X} {hex_col} {ascii_col}"
+            ascii_col = char_encode(bytes(bytez))
+            chunk = f"{offset:08X} {hex_col} {ascii_col}"
+            #yield chunk
+            #print(f"chunk in here is 2{chunk}")
             offset += size
     return next
 
 
-def dump(size=256):
-    next_line = dump_line(size//16, 0)
-    for l in next_line():
-        print(l)
+def dump(size=256, text=None):
+    #beg_ind = random.randint(0, size - len(text))
+    #end_ind = start + len(text)
+
+    next_line = dump_block(size // CHUNK_SIZE, 0)
+    offset = 0x00
+
+    coroutine = next_line()
+    coroutine.__next__()
+    ### start
+    #coroutine.send(None)
+    for chunk in coroutine:
+        print(f"dump: {chunk}")
+        coroutine.send("abc")
         time.sleep(0.5)
+        offset += CHUNK_SIZE
 
 
-def bytes_to_ascii(bytez, replace='.'):
+def char_encode(bytez, replace='.'):
     """
-    Converts bytes type given into printable
-    ascii characters
+    Encodes bytes given to ascii characters.
+    Non-printable ascii characters are replaced
+    with <p>replace</p>
     """
     chars = bytez.decode('ascii', 'replace').replace('\ufffD', replace)
     return ''.join([c if c.isprintable() else '.' for c in chars])
@@ -67,6 +86,17 @@ def hex_dump(byte_np, offset=0):
 
     return output
 
+x = -1
+
+def foo():
+    nonlocal x
+    while True:
+        y = yield(x)
+        x += 1
+
 
 if __name__ == '__main__':
-     dump()
+    g = foo()
+    for e in g:
+        print(e)
+        time.sleep(1)
