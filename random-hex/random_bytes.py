@@ -42,33 +42,40 @@ def random_hex_np(text=None, length=256):
     yield (numpy.array(bytez).reshape(length // 16, 16))
 
 
-def random_block(size, iterate=100):
+def random_block(size=SIZE):
+    iterate = size // CHUNK_SIZE
     while iterate:
-        yield os.urandom(size)
+        yield os.urandom(CHUNK_SIZE)
         iterate -= 1
 
 
-def dump_block(size=0x10, offset=0x00):
+def dump_block():
+    offset = 0x00
+    @coroutine
     def next():
         nonlocal offset
         chunk = None
-        for bytez in random_block(size):
-            text = yield(chunk)
-            print(f"text is {text}")
+        for bytez in random_block():
+            loc = yield(chunk)
+            logger.debug("received=%s", loc)
+
+            if loc:
+                ind, txt = loc
+                bytez_array = bytearray(bytez)
+                bytez_array[ind:ind + len(txt)] = txt.encode('ascii')
+                bytez = bytes(bytez_array)
+
             hex_col = " ".join([f"{b:02X}" for b in bytez])
             ascii_col = char_encode(bytes(bytez))
             chunk = f"{offset:08X} {hex_col} {ascii_col}"
-            #yield chunk
-            #print(f"chunk in here is 2{chunk}")
-            offset += size
+            offset += CHUNK_SIZE
     return next
 
 
 def dump(size=256, text=None):
-    #beg_ind = random.randint(0, size - len(text))
-    #end_ind = start + len(text)
-
-    next_line = dump_block(size // CHUNK_SIZE, 0)
+    next_chunk = dump_block()()
+    txt_locs = find_txt_locs(text)
+    logger.debug("Got locs=%s", txt_locs)
     offset = 0x00
 
     #next_chunk.__next__()
@@ -107,7 +114,5 @@ def find_txt_locs(text):
 
 
 if __name__ == '__main__':
-    g = foo()
-    for e in g:
-        print(e)
-        time.sleep(1)
+    for line in dump(text = "selcuk karakayali"):
+        print(f"{line}")
