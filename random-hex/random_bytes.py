@@ -12,6 +12,25 @@ logging.basicConfig(level=('INFO'))
 SIZE = 256
 CHUNK_SIZE = 16
 
+
+def coroutine(func):
+    def start(*args,**kwargs):
+        g = func(*args,**kwargs)
+        g.__next__()
+        return g
+    return start
+
+
+def char_encode(bytez, replace='.'):
+    """
+    Encodes bytes given to ascii characters.
+    Non-printable ascii characters are replaced
+    with <p>replace</p>
+    """
+    chars = bytez.decode('ascii', 'replace').replace('\ufffD', replace)
+    return ''.join([c if c.isprintable() else '.' for c in chars])
+
+
 def random_hex_np(text=None, length=256):
     """
     rows of 16 bytes
