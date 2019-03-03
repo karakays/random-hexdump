@@ -1,3 +1,4 @@
+import logging
 import time
 import os
 import base64
@@ -5,6 +6,10 @@ import random
 import numpy
 
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=('INFO'))
+
+SIZE = 256
 CHUNK_SIZE = 16
 
 def random_hex_np(text=None, length=256):
