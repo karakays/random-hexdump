@@ -71,52 +71,39 @@ def dump(size=256, text=None):
     next_line = dump_block(size // CHUNK_SIZE, 0)
     offset = 0x00
 
-    coroutine = next_line()
-    coroutine.__next__()
-    ### start
-    #coroutine.send(None)
-    for chunk in coroutine:
-        print(f"dump: {chunk}")
-        coroutine.send("abc")
-        time.sleep(0.5)
-        offset += CHUNK_SIZE
+    #next_chunk.__next__()
+    try:
+        while True:
+            loc = txt_locs.get(offset)
+            chunk = next_chunk.send(loc)
+            yield(chunk)
+            time.sleep(0.5)
+            offset += CHUNK_SIZE
+    except StopIteration:
+            logger.debug("Done consuming")
 
 
-def char_encode(bytez, replace='.'):
-    """
-    Encodes bytes given to ascii characters.
-    Non-printable ascii characters are replaced
-    with <p>replace</p>
-    """
-    chars = bytez.decode('ascii', 'replace').replace('\ufffD', replace)
-    return ''.join([c if c.isprintable() else '.' for c in chars])
+def find_txt_locs(text):
+    curr_ind = random.randint(0, SIZE - len(text))
 
+    txt_ind = 0
+    txt_os = (curr_ind // CHUNK_SIZE) * CHUNK_SIZE
+    locs = {}
 
-def hex_dump(byte_np, offset=0):
-    """
-    Returns hexadecimal representation of the
-    numpy array of bytes given
-    """
-    row = None
-    line = None
-    word = "2 bytes"
-    output = ""
+    while txt_ind < len(text):
+        logger.debug("curr_ind=%s, txt_ind=%s, txt_os=%s",
+                    curr_ind, txt_ind, txt_os)
+        rel_ind = curr_ind % CHUNK_SIZE
+        logger.debug("rel_ind=%s", rel_ind)
+        txt_end = txt_ind + CHUNK_SIZE - rel_ind
+        chunk_txt = text[txt_ind:txt_end]
+        logger.debug("chunk_txt=%s", chunk_txt)
+        locs[txt_os] = (rel_ind, chunk_txt)
+        curr_ind += len(chunk_txt)
+        txt_ind += len(chunk_txt)
+        txt_os += CHUNK_SIZE
 
-    for e in byte_np:
-        hex_col = " ".join([f"{b:02X}" for b in e])
-        ascii_col = bytes_to_ascii(bytes(e))
-        output += f"{offset:08X} {hex_col} {ascii_col}\n"
-        offset += 16
-
-    return output
-
-x = -1
-
-def foo():
-    nonlocal x
-    while True:
-        y = yield(x)
-        x += 1
+    return locs
 
 
 if __name__ == '__main__':
