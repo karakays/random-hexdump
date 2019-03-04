@@ -30,20 +30,20 @@ def char_encode(bytez, replace='.'):
     return ''.join([c if c.isprintable() else '.' for c in chars])
 
 
-def random_block(size=SIZE):
+def random_chunk(size=SIZE):
     iterate = size // CHUNK_SIZE
     while iterate:
         yield os.urandom(CHUNK_SIZE)
         iterate -= 1
 
 
-def dump_block():
+def dump_chunk():
     offset = 0x00
     @coroutine
     def next():
         nonlocal offset
         chunk = None
-        for bytez in random_block():
+        for bytez in random_chunk():
             loc = yield(chunk)
             logger.debug("received=%s", loc)
 
@@ -60,8 +60,8 @@ def dump_block():
     return next
 
 
-def dump(size=256, text=None):
-    next_chunk = dump_block()()
+def dump_block(size=256, text=None):
+    next_chunk = dump_chunk()()
     txt_locs = find_txt_locs(text)
     logger.debug("Got locs=%s", txt_locs)
     offset = 0x00
@@ -101,5 +101,5 @@ def find_txt_locs(text):
 
 
 if __name__ == '__main__':
-    for line in dump(text = "selcuk karakayali"):
+    for line in dump_block(text = "selcuk karakayali"):
         print(f"{line}")
