@@ -3,7 +3,6 @@ import time
 import os
 import base64
 import random
-import numpy
 
 
 logger = logging.getLogger(__name__)
@@ -23,23 +22,12 @@ def coroutine(func):
 
 def char_encode(bytez, replace='.'):
     """
-    Encodes bytes given to ascii characters.
-    Non-printable ascii characters are replaced
+    Encodes bytes given into ascii characters
+    while non-printable characters are replaced
     with <p>replace</p>
     """
     chars = bytez.decode('ascii', 'replace').replace('\ufffD', replace)
     return ''.join([c if c.isprintable() else '.' for c in chars])
-
-
-def random_hex_np(text=None, length=256):
-    """
-    rows of 16 bytes
-    """
-    bytez = bytearray(os.urandom(length))
-    start = random.randint(0, length - len(text))
-    end = start + len(text)
-    bytez[start:end] = text.encode('ascii')
-    yield (numpy.array(bytez).reshape(length // 16, 16))
 
 
 def random_block(size=SIZE):
@@ -78,7 +66,6 @@ def dump(size=256, text=None):
     logger.debug("Got locs=%s", txt_locs)
     offset = 0x00
 
-    #next_chunk.__next__()
     try:
         while True:
             loc = txt_locs.get(offset)
