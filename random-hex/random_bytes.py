@@ -59,9 +59,9 @@ def dump_chunk():
     return next
 
 
-def dump_block(size=256, text=None):
+def dump_block(size=256, txt=None):
     next_chunk = dump_chunk()()
-    txt_locs = find_txt_locs(text)
+    txt_locs = find_txt_locs(txt) if txt else dict()
     logger.debug("Got locs=%s", txt_locs)
     offset = 0x00
 
@@ -99,6 +99,6 @@ def find_txt_locs(text):
     return locs
 
 
-if __name__ == '__main__':
-    for line in dump_block(text = "selcuk karakayali"):
+def run(txt = None):
+    for line in dump_block(txt=txt):
         print(f"{line}")
