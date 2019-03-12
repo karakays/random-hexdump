@@ -1,2 +1,3 @@
-** run with python -m option
-** timed decorator
+* run with python -m option
+* offset bug: off-by-one error
+* timed decorator
