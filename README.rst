@@ -17,9 +17,8 @@ Usage
 .. highlight:: python
    :linenothreshold: 5
 
->>> import random-hex
->>> for line in dump(text = "selcuk karakayali")
-...     print(f"line")
+python3 -m random-hex "selcuk karakayali"
+
 00000000 7E B0 14 53 85 42 07 E8 50 77 6A C6 05 D5 79 88 ~..S.B..Pwj...y.
 00000010 AA BE 67 63 F2 4C 88 58 2B 38 C3 F3 D3 4D 6C AD ..gc.L.X+8...Ml.
 00000020 8A 23 56 5C C0 71 3D 9F 28 AC C7 AF AA 57 34 72 .#V\.q=.(....W4r
