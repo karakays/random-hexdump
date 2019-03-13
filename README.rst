@@ -5,7 +5,7 @@ random-hexdump
 
 A hexdump implementation.
 
-With a bit of difference, there is no input file and instead it generates bytes at random while allowing to embed custom text into it.
+With a slight difference, there is no input file and instead it generates bytes at random while allowing to embed custom text into it.
 
 The display format starts with the offset in hexadecimal followed by 16 space-separated random hexadecimal bytes that contains your custom text and finally followed by the same sixteen bytes in ASCII representation.
 
@@ -33,6 +33,7 @@ Usage
    000000C0 46 45 37 B0 2B 6D F9 BF 42 AD 06 B0 8B 3E 27 6F FE7.+m..B....>'o
    000000D0 D3 2A E6 C0 5F FA A6 16 CF 91 ED 19 85 45 75 8E .*.._........Eu.
    000000E0 B9 9F 9D C6 03 92 67 AB 11 8E 20 C5 26 7D 64 DE ......g... .&}d.
+   ...
 
 ---------------
 License

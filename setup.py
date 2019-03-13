@@ -12,6 +12,6 @@ setup(
     packages=find_packages(),
     python_requires='>=3',
     license='MIT',
-    description='todo',
+    description='Generate random hexdumps',
     long_description=open('README.rst').read(),
 )
