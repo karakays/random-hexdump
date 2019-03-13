@@ -5,7 +5,7 @@ random-hexdump
 
 A hexdump implementation.
 
-With a slight difference, there is no input file and instead it generates bytes at random while allowing to embed custom text into it.
+With a slight difference, instead reading an input file, `random-hexdump` generates bytes at random while allowing to embed custom text into it.
 
 The display format starts with the offset in hexadecimal followed by 16 space-separated random hexadecimal bytes that contains your custom text and finally followed by the same sixteen bytes in ASCII representation.
 
@@ -16,7 +16,7 @@ Usage
 ---------------
 .. code:: bash
 
-   $ python3 -m random-hex "selcuk karakayali"
+   $ python3 -m random-hexdump "selcuk karakayali"
 
    00000000 7E B0 14 53 85 42 07 E8 50 77 6A C6 05 D5 79 88 ~..S.B..Pwj...y.
    00000010 AA BE 67 63 F2 4C 88 58 2B 38 C3 F3 D3 4D 6C AD ..gc.L.X+8...Ml.
