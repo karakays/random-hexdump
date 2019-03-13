@@ -5,11 +5,11 @@ random-hexdump
 
 A hexdump implementation.
 
-With a slight difference, instead reading an input file, `random-hexdump` generates bytes at random while allowing to embed custom text into it.
+With a slight difference, instead of reading from an input file, *random-hexdump* generates bytes at random while allowing to embed custom text into it.
 
 The display format starts with the offset in hexadecimal followed by 16 space-separated random hexadecimal bytes that contains your custom text and finally followed by the same sixteen bytes in ASCII representation.
 
-Inspired by *Jamie Zawinski*'s homepage_.
+Inspired by Jamie Zawinski's homepage_.
 
 ---------------
 Usage
