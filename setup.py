@@ -14,4 +14,7 @@ setup(
     license='MIT',
     description='Generate random hexdumps',
     long_description=open('README.rst').read(),
+    classifiers=[ "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License"
+    ]
 )
