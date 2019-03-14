@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=('INFO'))
 
-SIZE = 256
+BLOCK_SIZE = 256
 CHUNK_SIZE = 16
 
 
@@ -29,11 +29,9 @@ def char_encode(bytez, replace='.'):
     return ''.join([c if c.isprintable() else '.' for c in chars])
 
 
-def random_chunk(size=SIZE):
-    iterate = size // CHUNK_SIZE
-    while iterate:
+def random_chunk():
+    while True:
         yield os.urandom(CHUNK_SIZE)
-        iterate -= 1
 
 
 def dump_chunk():
@@ -70,14 +68,14 @@ def dump_block(size=256, txt=None):
             loc = txt_locs.get(offset)
             chunk = next_chunk.send(loc)
             yield(chunk)
-            time.sleep(0.5)
+            time.sleep(0.1)
             offset += CHUNK_SIZE
     except StopIteration:
             logger.debug("Done consuming")
 
 
 def find_txt_locs(text):
-    curr_ind = random.randint(0, SIZE - len(text))
+    curr_ind = random.randint(0, BLOCK_SIZE - len(text))
 
     txt_ind = 0
     txt_os = (curr_ind // CHUNK_SIZE) * CHUNK_SIZE
