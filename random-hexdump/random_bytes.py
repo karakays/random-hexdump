@@ -9,6 +9,7 @@ logging.basicConfig(level=('INFO'))
 
 BLOCK_SIZE = 256
 CHUNK_SIZE = 16
+global_offset = 0x00
 
 
 def coroutine(func):
@@ -58,10 +59,9 @@ def random_chunk():
 
 
 def dump_chunk():
-    offset = 0x00
     @coroutine
     def next():
-        nonlocal offset
+        global global_offset
         chunk = None
         for bytez in random_chunk():
             loc = yield(chunk)
@@ -75,8 +75,8 @@ def dump_chunk():
 
             hex_col = " ".join([f"{b:02X}" for b in bytez])
             ascii_col = char_encode(bytes(bytez))
-            chunk = f"{offset:08X} {hex_col} {ascii_col}"
-            offset += CHUNK_SIZE
+            chunk = f"{global_offset:08X} {hex_col} {ascii_col}"
+            global_offset += CHUNK_SIZE
         # Yield the last chunk here. since this co-routine stays one-step
         # behind the random_chunk generator, this is necessary to prevent
         # last chunk to be lost.
@@ -84,23 +84,24 @@ def dump_chunk():
     return next
 
 
-def dump_block(size=256, txt=None):
+def dump_block(txt):
     next_chunk = dump_chunk()()
     txt_locs = find_txt_locs(txt) if txt else dict()
     logger.debug("Got locs=%s", txt_locs)
     offset = 0x00
 
     try:
-        while True:
+        while offset < BLOCK_SIZE:
             loc = txt_locs.get(offset)
             chunk = next_chunk.send(loc)
             yield(chunk)
-            time.sleep(0.1)
             offset += CHUNK_SIZE
     except StopIteration:
             logger.debug("Done consuming")
 
 
 def run(txt = None):
-    for line in dump_block(txt=txt):
-        print(f"{line}")
+    while True:
+        for line in dump_block(txt=txt):
+            print(f"{line}")
+            time.sleep(0.1)
