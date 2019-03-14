@@ -29,6 +29,29 @@ def char_encode(bytez, replace='.'):
     return ''.join([c if c.isprintable() else '.' for c in chars])
 
 
+def find_txt_locs(text):
+    curr_ind = random.randint(0, BLOCK_SIZE - len(text))
+
+    txt_ind = 0
+    txt_os = (curr_ind // CHUNK_SIZE) * CHUNK_SIZE
+    locs = {}
+
+    while txt_ind < len(text):
+        logger.debug("curr_ind=%s, txt_ind=%s, txt_os=%s",
+                    curr_ind, txt_ind, txt_os)
+        rel_ind = curr_ind % CHUNK_SIZE
+        logger.debug("rel_ind=%s", rel_ind)
+        txt_end = txt_ind + CHUNK_SIZE - rel_ind
+        chunk_txt = text[txt_ind:txt_end]
+        logger.debug("chunk_txt=%s", chunk_txt)
+        locs[txt_os] = (rel_ind, chunk_txt)
+        curr_ind += len(chunk_txt)
+        txt_ind += len(chunk_txt)
+        txt_os += CHUNK_SIZE
+
+    return locs
+
+
 def random_chunk():
     while True:
         yield os.urandom(CHUNK_SIZE)
@@ -76,29 +99,6 @@ def dump_block(size=256, txt=None):
             offset += CHUNK_SIZE
     except StopIteration:
             logger.debug("Done consuming")
-
-
-def find_txt_locs(text):
-    curr_ind = random.randint(0, BLOCK_SIZE - len(text))
-
-    txt_ind = 0
-    txt_os = (curr_ind // CHUNK_SIZE) * CHUNK_SIZE
-    locs = {}
-
-    while txt_ind < len(text):
-        logger.debug("curr_ind=%s, txt_ind=%s, txt_os=%s",
-                    curr_ind, txt_ind, txt_os)
-        rel_ind = curr_ind % CHUNK_SIZE
-        logger.debug("rel_ind=%s", rel_ind)
-        txt_end = txt_ind + CHUNK_SIZE - rel_ind
-        chunk_txt = text[txt_ind:txt_end]
-        logger.debug("chunk_txt=%s", chunk_txt)
-        locs[txt_os] = (rel_ind, chunk_txt)
-        curr_ind += len(chunk_txt)
-        txt_ind += len(chunk_txt)
-        txt_os += CHUNK_SIZE
-
-    return locs
 
 
 def run(txt = None):
