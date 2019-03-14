@@ -54,6 +54,10 @@ def dump_chunk():
             ascii_col = char_encode(bytes(bytez))
             chunk = f"{offset:08X} {hex_col} {ascii_col}"
             offset += CHUNK_SIZE
+        # Yield the last chunk here. since this co-routine stays one-step
+        # behind the random_chunk generator, this is necessary to prevent
+        # last chunk to be lost.
+        yield(chunk)
     return next
 
 
