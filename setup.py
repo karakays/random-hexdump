@@ -1,10 +1,13 @@
 from setuptools import setup, find_packages
 
-VERSION = open('VERSION').read()
+pkg_vars = {}
+
+with open("random-hexdump/_version.py") as fp:
+    exec(fp.read(), pkg_vars)
 
 setup(
     name='random-hexdump',
-    version=VERSION,
+    version=pkg_vars['__version__'],
     author='Selçuk Karakayalı',
     author_email='skarakayali@gmail.com',
     maintainer='Selçuk Karakayalı',
