@@ -1,3 +1,4 @@
-* timed decorator
-* release and dist on pypi
+* make the demo with HQ terminal recording
 * colored output
+* release and dist on pypi
+* timed decorator
