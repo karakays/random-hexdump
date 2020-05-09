@@ -1,5 +1,5 @@
 PYTHON	= python3
-MODULE	= random-hexdump
+MODULE	= rhd
 VERSION	= $(shell awk '{print $$3}' ${MODULE}/_version.py | tr -d "'")
 
 .PHONY: clean
@@ -15,12 +15,17 @@ clean-pyc:
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name __pycache__ -delete
 
-.PHONY: bdist
-bdist:
+
+.PHONY: build
+build:
 	$(PYTHON) setup.py bdist
 
-.PHONY: sdist
-sdist:
+.PHONY: test
+test:
+	$(PYTHON) setup.py bdist
+
+.PHONY: source
+source:
 	$(PYTHON) setup.py sdist
 
 .PHONY: install
