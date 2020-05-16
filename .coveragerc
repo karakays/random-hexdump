@@ -1,0 +1,10 @@
+[report]
+fail_under = 90
+show_missing = True
+ignore_errors = True
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if .debug:
+    raise NotImplementedError
+    if __name__ == .__main__.:

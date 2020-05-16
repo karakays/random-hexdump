@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/karakays/random-hexdump.svg?branch=master)](https://travis-ci.org/karakays/random-hexdump)
 
 # random-hexdump
 
