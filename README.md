@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/karakays/random-hexdump.svg?branch=master)](https://travis-ci.org/karakays/random-hexdump)
+[![Code Coverage](https://codecov.io/gh/karakays/random-hexdump/branch/master/graph/badge.svg)](https://codecov.io/gh/karakays/random-hexdump/branch/master)
 
 # random-hexdump
 
