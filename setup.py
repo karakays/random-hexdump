@@ -16,7 +16,7 @@ setup(
     packages=find_packages(),
     python_requires='>=3',
     license='MIT',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     classifiers=[ "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License"
     ]
