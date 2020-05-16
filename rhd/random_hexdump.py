@@ -87,14 +87,14 @@ def render_hex(chunk, start_index, end_index):
     marked = bytes_hex[mark_start:mark_end]
     logger.debug("hex=%s, hex_mark=%s", bytes_hex, marked)
     if end_index:
-        bytes_hex = bytes_hex.replace(marked, f"\033[1;32;40m{marked}\033[0m")
+        bytes_hex = bytes_hex.replace(marked, f"\033[41m{marked}\033[0m")
     return bytes_hex
 
 
 def render_ascii(chunk, start_index, end_index):
     bytes_ascii = printable_encode(bytes(chunk))
     marked = bytes_ascii[start_index:end_index]
-    return bytes_ascii.replace(marked, f"\033[1;32;40m{marked}\033[0m") if marked else bytes_ascii
+    return bytes_ascii.replace(marked, f"\033[41m{marked}\033[0m") if marked else bytes_ascii
 
 
 def dump_line():
@@ -140,7 +140,10 @@ def dump_block(text):
 def run(txt = None):
     global global_offset
     global_offset = int.from_bytes(os.urandom(8), byteorder='little')
-    while True:
-        for line in dump_block(text=txt):
-            print(f"{line}")
-            time.sleep(0.1)
+    try:
+        while True:
+            for line in dump_block(text=txt):
+                print(f"{line}")
+                time.sleep(0.1)
+    except KeyboardInterrupt:
+        pass
